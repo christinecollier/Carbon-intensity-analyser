@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Finance Dashboard Application</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Roboto:wght@100;300;400&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <!--Style inspiration from https://www.figma.com/design/bgmRiTdqWSvuYokoMpdiNi/%5BFREE%5D-Freelance-%26-Remote-Job-Illustrations-(Community)?node-id=403-26&node-type=frame&t=SPQXAFFrX45AMmzr-0-->
+    <header>
+      <div class="flex" id="hero">
+        <div id="title">
+          <h1>National Carbon Intensity</h1>
+        </div>
+        <div id="subtitle">
+          <h2>Powered by the <a href="https://carbon-intensity.github.io/api-definitions/#carbon-intensity-api-v2-0-0">NESO Carbon Intensity API</a></h2>
+        </div>
+      </div>
+    </header>
+    <div id="introWrapper" class="flex">
+      <div id="introContainer">
+        <div id="introText">
+          <div id="subIntroText">What is Carbon Intensity?</div>
+          <!-- <div id="underline">
+            <img src="./images/dual_underline.svg" height="15">
+          </div> -->
+          <p>The <strong>carbon intensity</strong> of electricity if a measure of how much CO<sub>2</sub> emissions are produced per kilowatt hour of electricity consumed. <br><br>
+
+          NESO's Carbon Intensity API provides an indicative trend of regional carbon intensity of the electricity system in Great Britain up to 2 days ahead of real-time.</p>
+        </div>
+        <div id="introImageContainer" class="flex">
+          <div id="introImage" class="flex">
+            <img src="./images/hero-main.svg">
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Data section -->
+    <div class="flex" id="summaryContainer">
+      <div id="timePeriodContainer"><span id="timePeriod"></span></div>
+      <div id="intensityContainer"><span id="intensity"></span></div>
+    </div>
+    <div id="chartContainer" class="flex">
+      <canvas id="chart" width="300" height="150"></canvas>
+    </div>
+    <!-- Footer -->
+    <footer>
+      <div id="creditsWrapper" class="flex">
+        <div id="creditsBanner" class="flex">
+          <h2>Attributions</h2>
+          <div id="pattern">
+            <img src="./images/pattern.svg">
+          </div>
+        </div>
+      </div>
+      <div id="credits" class="flex">
+        <div>
+          <p>Illustrations by <a href="https://www.behance.net/IlliyinStudio">@illiyinstudio</a></p>
+        </div>
+        <div>
+          <p>SVG Underline doodles by <a href="https://www.svgbackgrounds.com/elements/underline-doodles/">SVGBackgrounds.com</a></p>
+        </div>
+      </div>
+      </div>
+      <div id="logoWrapper" class="flex">
+        <div id="nesoLogo">
+          <a href="https://www.neso.energy/">
+            <img src="./images/NESO_logo.svg" height="60" aria-label="NESO logo">
+          </a>
+        </div>
+        <div id="chartjsLogo">
+          <a href="https://www.chartjs.org/">
+            <img src="./images/chart.js_logo.png" aria-label="Chart.js logo">
+          </a>
+        </div>
+      </div>
+    </footer>
+    <script src="index.js"></script>
+  </body>
+</html>
