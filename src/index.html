@@ -41,12 +41,16 @@
         </div>
       </div>
       <!-- Data section -->
-      <div class="flex" id="summaryContainer">
-        <div id="timePeriodContainer"><span id="timePeriod"></span></div>
-        <div id="intensityContainer"><span id="intensity"></span></div>
-      </div>
-      <div id="chartContainer" class="flex">
-        <canvas id="chart" width="300" height="150"></canvas>
+      <div id="dataContainer">
+        <div class="flex" id="summaryContainer">
+          <div id="forecastTime"></div>
+          <div id="latestIntensity"></div>
+          <div id="forecastMax"></div>
+          <div id="forecastMin"></div>
+        </div>
+        <div id="chartContainer" class="flex" style="position: relative; height:30rem; width:100%">
+          <canvas id="chart"></canvas>
+        </div>
       </div>
     </div>
     <!-- Footer -->

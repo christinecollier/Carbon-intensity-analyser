@@ -45,9 +45,11 @@ function getData(dataArray, timeIndex) {
   const intensityLabels = [];
   const forecastLabels = [];
   const { data } = dataArray;
-  const { from, to, intensity } = data[timeIndex];
-  let fromTime = from.slice(11, 16);
-  let toTime = to.slice(11, 16);
+
+  //Get time period of latest complete data set
+  const { from, to, intensity } = data[timeIndex - 2];
+  let timeFrom = from.slice(11, 16);
+  let timeTo = to.slice(11, 16);
   for (let i = 0; i < data.length; i++) {
     let timeLabel = data[i]['from'].slice(11, 16);
     let intensity = data[i]['intensity']['actual'];
@@ -61,8 +63,30 @@ function getData(dataArray, timeIndex) {
     }
   }
 
-  document.getElementById('timePeriod').innerHTML = `From ${fromTime} to ${toTime}`
-  document.getElementById('intensity').innerHTML = `Intensity: ${intensity['actual']} (${intensity['index']})`
+  document.getElementById('forecastTime').innerHTML = `
+    <div id="timePeriodCaption">Latest data available for </div>
+    <div id="timePeriod" class="chartSummaryStats">${timeFrom} - ${timeTo}</div>
+  `;
+  document.getElementById('latestIntensity').innerHTML = `
+    <div id="timePeriodCaption">${intensity['index']}</div>
+    <div id="intensityContainer" class="flex">
+      <div>
+        <img id="intensityGauge" src="./images/intensity_indicator.svg" alt="intensity gauge icon" width="20" height="20">
+      </div>
+      <div class="chartSummaryStats">${intensity['actual']}</div>
+    </div>
+  `;
+  document.getElementById('latestIntensity').style.color = 'var(--electric-blue-color)';
+  console.log(document.getElementById('intensityGauge').getElementsByTagName('img'));
+  document.getElementById('forecastMax').innerHTML = `
+    <div id="maxCaption">Max: </div>
+    <div id="dailyMaxIntensity" class="chartSummaryStats"></div>
+  `;
+  document.getElementById('forecastMin').innerHTML = `
+    <div id="minCaption">Min: </div>
+    <div id="dailyMinIntensity" class="chartSummaryStats"></div>
+  `;
+  
   previousDataObject = data[timeIndex - 1]
   latestDataObject = data[timeIndex];
   initialiseChart(xlabels, intensityLabels, forecastLabels);
@@ -70,7 +94,7 @@ function getData(dataArray, timeIndex) {
 }
 
 //Initialise chart.js
-initialiseChart(xlabels, intensityLabels);
+initialiseChart(xlabels, intensityLabels, forecastLabels);
 function initialiseChart(xlabels, intensityLabels, forecastLabels) {
   const style = getComputedStyle(document.body);
   const ctx = document.getElementById('chart');
@@ -81,18 +105,16 @@ function initialiseChart(xlabels, intensityLabels, forecastLabels) {
         type: 'line',
         label: 'Daily National Carbon Intensity',
         data: intensityLabels,
-        backgroundColor: `${style.getPropertyValue('--main-grey-color').trim()}`,
-        borderColor: `${style.getPropertyValue('--main-dark-blue-color').trim()}`,
+        backgroundColor: `${style.getPropertyValue('--opaque-electric-blue-color').trim()}`,
+        borderColor: `${style.getPropertyValue('--electric-blue-color').trim()}`,
         tension: 0.3,
         borderWidth: 2,
         pointRadius: 0,
         //point styles
         pointHitRadius: 10,
-        pointBackgroundColor: `${style.getPropertyValue('--main-dark-blue-color').trim()}`, 
-        pointBorderColor: `${style.getPropertyValue('--main-dark-blue-color').trim()}`, 
+        pointBorderColor: `${style.getPropertyValue('--electric-blue-color').trim()}`, 
         pointBorderWidth: 2,
         pointHoverBackgroundColor: `${style.getPropertyValue('--main-grey-color').trim()}`,
-        // pointHoverBorderColor: `${style.getPropertyValue('--main-blue-color').trim()}`
         fill: {
           target: 'origin',
           below: `${style.getPropertyValue('--main-grey-color').trim()}`
@@ -110,15 +132,10 @@ function initialiseChart(xlabels, intensityLabels, forecastLabels) {
         pointRadius: 0,
         //point styles
         pointHitRadius: 10,
-        pointBackgroundColor: `${style.getPropertyValue('--dark-yellow-color').trim()}`, 
         pointBorderColor: `${style.getPropertyValue('--dark-yellow-color').trim()}`, 
         pointBorderWidth: 2,
         pointHoverBackgroundColor: `${style.getPropertyValue('--yellow-color').trim()}`,
         // pointHoverBorderColor: `${style.getPropertyValue('--main-blue-color').trim()}`
-        fill: {
-          target: 'origin',
-          below: `${style.getPropertyValue('--main-grey-color').trim()}`
-        },
         order: 2
       }],
     },
@@ -147,6 +164,9 @@ function initialiseChart(xlabels, intensityLabels, forecastLabels) {
           }
         }
       },
+      responsive: true,
+      maintainAspectRatio: true,
+      aspectRatio: 12 / 7, //width = 1.75height
       plugins: {
         legend: {
           position: 'bottom'
