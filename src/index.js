@@ -65,32 +65,91 @@ function getData(dataArray, timeIndex) {
   document.getElementById('intensity').innerHTML = `Intensity: ${intensity['actual']} (${intensity['index']})`
   previousDataObject = data[timeIndex - 1]
   latestDataObject = data[timeIndex];
-  initialiseChart(xlabels, intensityLabels);
+  initialiseChart(xlabels, intensityLabels, forecastLabels);
   return previousDataObject, latestDataObject;
 }
 
 //Initialise chart.js
 initialiseChart(xlabels, intensityLabels);
-function initialiseChart(xlabels, intensityLabels) {
+function initialiseChart(xlabels, intensityLabels, forecastLabels) {
+  const style = getComputedStyle(document.body);
   const ctx = document.getElementById('chart');
-  const myChart = new Chart(ctx, {
-    type: 'line',
+  const mixedChart = new Chart(ctx, {
     data: {
       labels: xlabels,
       datasets: [{
+        type: 'line',
         label: 'Daily National Carbon Intensity',
-        // data: [12, 19, 3, 5, 2, 3],
         data: intensityLabels,
-        backgroundColor: 'rgba(40, 115, 255, 0.7)',
-        borderColor: 'rgba(40, 115, 255, 0.7)',
+        backgroundColor: `${style.getPropertyValue('--main-grey-color').trim()}`,
+        borderColor: `${style.getPropertyValue('--main-dark-blue-color').trim()}`,
         tension: 0.3,
-        borderWidth: 2
-      }]
+        borderWidth: 2,
+        pointRadius: 0,
+        //point styles
+        pointHitRadius: 10,
+        pointBackgroundColor: `${style.getPropertyValue('--main-dark-blue-color').trim()}`, 
+        pointBorderColor: `${style.getPropertyValue('--main-dark-blue-color').trim()}`, 
+        pointBorderWidth: 2,
+        pointHoverBackgroundColor: `${style.getPropertyValue('--main-grey-color').trim()}`,
+        // pointHoverBorderColor: `${style.getPropertyValue('--main-blue-color').trim()}`
+        fill: {
+          target: 'origin',
+          below: `${style.getPropertyValue('--main-grey-color').trim()}`
+        },
+        order: 1
+      },  
+      {
+        type: 'bar',
+        label: 'Forecast',
+        data: forecastLabels,
+        backgroundColor: `${style.getPropertyValue('--yellow-color').trim()}`,
+        borderColor: `${style.getPropertyValue('--dark-yellow-color').trim()}`,
+        tension: 0.2,
+        borderWidth: 2,
+        pointRadius: 0,
+        //point styles
+        pointHitRadius: 10,
+        pointBackgroundColor: `${style.getPropertyValue('--dark-yellow-color').trim()}`, 
+        pointBorderColor: `${style.getPropertyValue('--dark-yellow-color').trim()}`, 
+        pointBorderWidth: 2,
+        pointHoverBackgroundColor: `${style.getPropertyValue('--yellow-color').trim()}`,
+        // pointHoverBorderColor: `${style.getPropertyValue('--main-blue-color').trim()}`
+        fill: {
+          target: 'origin',
+          below: `${style.getPropertyValue('--main-grey-color').trim()}`
+        },
+        order: 2
+      }],
     },
     options: {
       scales: {
         y: {
-          beginAtZero: true
+          beginAtZero: true,
+          max: 500,
+          title: {
+            display: true,
+            text: `Carbon Intensity (gCO${'\u2082'} /kWh)`,
+            font: {
+              family: "'Roboto', sans-serif",
+              size: 14
+            } 
+          }
+        }, 
+        x: {
+          title: {
+            display: true,
+            text: 'Time (Local Time)',
+            font: {
+              family: "'Roboto', sans-serif",
+              size: 14
+            } 
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'bottom'
         }
       }
     }
