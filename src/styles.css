@@ -8,6 +8,7 @@
 :root {
     /* Whole web page */
     --main-gradient-fill:linear-gradient(0deg, rgba(27,42,62,1) 25%, rgba(38,59,85,1) 55%);
+    --main-box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
     --main-white-color: #ffffff;
     --main-navy-color: #181C47;
     --main-background-color: #263B55;
@@ -18,8 +19,8 @@
     --dark-yellow-color: #FF9F40;
     --yellow-color: #F4BE37;
     --main-grey-color: #5e84a188;
-    --electric-blue-color: #3078ff;
     --main-dark-blue-color: #2A306D;
+    --electric-blue-color: #3078ff;
     --opaque-electric-blue-color: rgba(48, 120, 255, 0.5);
     --main-orange-color: #E95C49;
     --main-green-color: #2ECC71; 
@@ -144,8 +145,16 @@ body {
     flex-direction: column;
     flex-wrap: nowrap;
     width: min(90%, 1024px);
-    border: solid 2px var(--main-grey-color);
+    box-shadow: var(--main-box-shadow);
     margin: 3rem 0;
+    padding-top: 2rem;
+}
+
+#chartTitle {
+    font-size: var(--subtitle-font-size);
+    font-weight: 400;
+    color: var(--main-background-color);
+    padding: 0 3rem;
 }
 
 #summaryContainer {
@@ -179,7 +188,7 @@ body {
     font-size: var(--caption-font-size);
 }
 
-#intensityContainer {
+#timePeriodCaption, #intensityContainer {
     justify-content: center;
     align-items: center;
 }
@@ -189,8 +198,14 @@ body {
 }
 
 /* container */
+#latestIntensity {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+}
+
 #forecastMax, #forecastMin {
-    display: flex;
+    justify-content: center;
+    align-items: center;
     flex-direction: column;
     flex-wrap: nowrap;
     border: solid 2px var(--electric-blue-color);
@@ -201,6 +216,7 @@ body {
 
 #chartContainer {
     display: flex;
+    justify-content: center;
     width: 100%;
     padding: 2rem 3rem;
 }

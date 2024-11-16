@@ -1,4 +1,4 @@
-//TASK: get current date and time, apply this to the api_url
+//TASK: get current date and time, apply this to the today_api_url
 
 let date = new Date().toJSON();
 let currentDate = date.slice(0, 10);
@@ -7,12 +7,12 @@ let currentHour = date.slice(11, 13);
 let currentMinute = date.slice(14, 16);
 console.log(`date is ${currentDate}`);
 console.log(`time is ${currentTime}`);
-const api_url = `https://api.carbonintensity.org.uk/intensity/date/${currentDate}`
+const today_api_url = `https://api.carbonintensity.org.uk/intensity/date/${currentDate}`
 
 //Get index of latest data
 let timeIndex;
 async function getTimeIndex() {
-  const response = await fetch(api_url);
+  const response = await fetch(today_api_url);
   const dataArray = await response.json();
   const { data } = dataArray;
   //Get possible array indices by hour
@@ -63,12 +63,21 @@ function getData(dataArray, timeIndex) {
     }
   }
 
+  //Get daily maximum and minimum forecast carbon intensity 
+  let dailyForecastArray = [];
+  for (let i = 0; i < data.length; i++) {
+    dailyForecastArray.push(data[i]['intensity']['forecast']);
+  }
+  //'...' is 'spread syntax'
+  let dailyMaxForecast = Math.max(...dailyForecastArray);
+  let dailyMinForecast = Math.min(...dailyForecastArray);
+
   document.getElementById('forecastTime').innerHTML = `
     <div id="timePeriodCaption">Latest data available for </div>
     <div id="timePeriod" class="chartSummaryStats">${timeFrom} - ${timeTo}</div>
   `;
   document.getElementById('latestIntensity').innerHTML = `
-    <div id="timePeriodCaption">${intensity['index']}</div>
+    <div id="timePeriodCaption" class="flex">${intensity['index']}</div>
     <div id="intensityContainer" class="flex">
       <div>
         <img id="intensityGauge" src="./images/intensity_indicator.svg" alt="intensity gauge icon" width="20" height="20">
@@ -79,12 +88,12 @@ function getData(dataArray, timeIndex) {
   document.getElementById('latestIntensity').style.color = 'var(--electric-blue-color)';
   console.log(document.getElementById('intensityGauge').getElementsByTagName('img'));
   document.getElementById('forecastMax').innerHTML = `
-    <div id="maxCaption">Max: </div>
-    <div id="dailyMaxIntensity" class="chartSummaryStats"></div>
+    <div id="maxCaption" class="flex">Max: </div>
+    <div id="dailyMaxIntensity" class="chartSummaryStats">${dailyMaxForecast}</div>
   `;
   document.getElementById('forecastMin').innerHTML = `
-    <div id="minCaption">Min: </div>
-    <div id="dailyMinIntensity" class="chartSummaryStats"></div>
+    <div id="minCaption" class="flex">Min: </div>
+    <div id="dailyMinIntensity" class="chartSummaryStats">${dailyMinForecast}</div>
   `;
   
   previousDataObject = data[timeIndex - 1]
