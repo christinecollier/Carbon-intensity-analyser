@@ -13,8 +13,10 @@
     --main-navy-color: #181C47;
     --main-background-color: #263B55;
     --main-font-family: 'Roboto', sans-serif;
+    --large-font-size: 2.5rem;
     --subtitle-font-size: 1.5rem;
     --caption-font-size: 0.9rem;
+    --subcaption-font-size: 0.85rem;
     /* Chart colours */
     --dark-yellow-color: #FF9F40;
     --yellow-color: #F4BE37;
@@ -57,7 +59,7 @@ header {
 }
 
 h1 {
-    font-size: 2.5rem;
+    font-size: var(--large-caption-size);
     font-weight: 400;
 }
 
@@ -65,6 +67,11 @@ h2 {
     font-size: var(--caption-font-size);
     font-weight: 300;
     color: var(--main-white-color);
+}
+
+h3 {
+    font-size: var(--subcaption-font-size);
+    color: var(--main-background-color);
 }
 
 body {
@@ -99,29 +106,21 @@ body {
     width: min(90%, 1024px);
     padding: 1rem 1rem;
     margin: 2rem;
-    background: var(--main-background-color);
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
 #introText {
-    color: var(--main-white-color);
+    color: var(--main-background-color);
     width: clamp(360px, 50%, 500px);
     padding: 1.25rem;
 }
 
 #subIntroText {
-    font-family: 'Playfair Display', sans-serif;
-    font-size: var(--subtitle-font-size);
-    font-weight: 200;
+    font-size: var(--large-font-size);
+    font-weight: 400;
     padding-bottom: 1.5rem;
 }
 
-#underline {
-    flex: 1, 1, 1rem;
-}
-
 #introText p {
-    /* font-family: 'Nunito', sans-serif; */
     font-weight: 300;
     line-height: 1.75rem;
 }
@@ -136,8 +135,32 @@ body {
     aspect-ratio: 1 / 1;
 }
 
-#introImage img {
+#introImage img, .insightImage {
     width: 100%;
+}
+
+#insightsContainer {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.indivInsight {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    width: max(9rem, 25%);
+    min-height: 310px;
+    margin: 0 1rem;
+}
+
+.insightCaption p {
+    font-size: 0.75rem;
+    color: var(--main-background-color);
+    font-weight: 300;
+    margin-top: 1rem;
+    margin-bottom: auto;
 }
 
 #dataContainer {
@@ -278,5 +301,16 @@ footer {
     #introImage {
         width: clamp(300px, 70%, 420px);
         aspect-ratio: 1 / 1;
+    }
+}
+
+@media (max-width: 638px) {
+    .indivInsight {
+        width: 100%;
+        align-items: center;
+    }
+    .insightImage {
+        width:50%;
+        margin-bottom: 1rem;
     }
 }
