@@ -82,7 +82,7 @@ function generateSummary(from, to, intensity, timeIndex) {
   let dailyMinForecast = Math.min(...dailyForecastArray);
 
   document.getElementById('forecastTime').innerHTML = `
-    <div id="timePeriodCaption">
+    <div id="timePeriodCaption">Latest data available 
        ${timeIndex >= 2 ? 'for ' : 'in'}
     </div>
     <div id="timePeriod" class="chartSummaryStats">
