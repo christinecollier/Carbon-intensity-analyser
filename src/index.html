@@ -24,11 +24,10 @@
       </div>
     </header>
     <div id="bodyWrapper" class="flex">
-
       <div id="introContainer">
         <div id="introText">
           <div id="subIntroText">What is Carbon Intensity?</div>
-          <p>The <strong>carbon intensity</strong> of electricity if a measure of how much CO<sub>2</sub> emissions are produced per kilowatt hour of electricity consumed.</p>
+          <p>The <strong>carbon intensity</strong> of electricity is a measure of how much CO<sub>2</sub> emissions are produced per kilowatt hour of electricity consumed.</p>
         </div>
         <div id="introImageContainer" class="flex">
           <div id="introImage">
@@ -63,16 +62,28 @@
       <!-- Data section -->
       <div id="dataContainer">
         <div id="chartTitle" class="flex">
-          <p>Live Carbon Intensity Data</p>
+          <p>Carbon Intensity Overview</p>
         </div>
         <div class="flex" id="summaryContainer">
-          <div id="forecastTime"></div>
-          <div id="latestIntensity"></div>
-          <div id="forecastMax"></div>
-          <div id="forecastMin"></div>
+          <div id="latestDataContainer" class="flex spacedTab">
+            <div id="forecastTime"></div>
+            <div id="latestIntensity"></div>
+          </div>
+          <div id="forecastMax" class="spacedTab"></div>
+          <div id="forecastMin" class="spacedTab"></div>
         </div>
         <div id="chartContainer" class="flex" style="position: relative; height:30rem; width:100%">
-          <canvas id="chart"></canvas>
+          <canvas id="chart" aria-label="a line graph showing the daily measured and forecasted carbon intensity" role="img">
+            <img src="" alt="Unable to load graph">
+          </canvas>
+        </div>
+        <div id="piechartWrapper" class="flex">
+          <div id="piechartLegendContainer" class="flex"></div>
+          <div id="piechartContainer" class="flex" style="position: relative; height:15rem; width:40%" >
+            <canvas id="pieChart" aria-label="a piechartgraph showing the current generation mix by fuel type" role="img">
+              <img src="" alt="Unable to load pie chart">
+            </canvas>
+          </div>
         </div>
       </div>
     </div>
