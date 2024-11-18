@@ -13,44 +13,48 @@
   </head>
   <body>
     <!--Style inspiration from https://www.figma.com/design/bgmRiTdqWSvuYokoMpdiNi/%5BFREE%5D-Freelance-%26-Remote-Job-Illustrations-(Community)?node-id=403-26&node-type=frame&t=SPQXAFFrX45AMmzr-0-->
-    <header>
-      <div class="flex" id="hero">
-        <div id="title">
-          <h1>National Carbon Intensity</h1>
-        </div>
-        <div id="subtitle">
-          <h2>Powered by the <a href="https://carbon-intensity.github.io/api-definitions/#carbon-intensity-api-v2-0-0">NESO Carbon Intensity API</a></h2>
-        </div>
-      </div>
+    <header id="header">
+      <ul class="flex" id="hero">
+        <li id="title"><p>Greenity</p></li>
+        <li id="navCaptionContainer" >
+          <ul id="navCaptions">
+            <li id="navCap_1" class="navCaption"><p>Carbon Intensity</p></li>
+            <li id="navCap_2" class="navCaption"><p>Generation Mix</p></li>
+            <li id="navCap_3" class="navCaption"><p>About</p></li>
+            <li id="navCap_4" class="navCaption"><p>Credits</p></li>
+          </ul>
+      </ul>
     </header>
     <div id="bodyWrapper" class="flex">
       <div id="introContainer">
         <div id="introText">
+          <h1><span id="introTextSpan">Live Insights, </span><br>One Place.</h1>
+          <h2>Powered by the<a href="https://carbon-intensity.github.io/api-definitions/#carbon-intensity-api-v2-0-0">NESO Carbon Intensity API <img src="./images/new_tab_icon.svg"></a></h2>
           <div id="subIntroText">What is Carbon Intensity?</div>
           <p>The <strong>carbon intensity</strong> of electricity is a measure of how much CO<sub>2</sub> emissions are produced per kilowatt hour of electricity consumed.</p>
         </div>
         <div id="introImageContainer" class="flex">
           <div id="introImage">
-            <img src="./images/hero-image.svg" alt="a man filling his car with petrol">
+            <img src="./images/intro_search.svg" alt="a man filling his car with petrol">
           </div>
         </div>
         <div id="insightsContainer" class="flex">
           <div id="firstInsight" class="indivInsight">
-            <img src="./images/book.svg" alt="a lady sitting down and reading a book" class="insightImage">
+            <img src="./images/intro_chart.svg" alt="a lady sitting down and reading a book" class="insightImage">
             <div id="firstInsightCaption" class="insightCaption">
               <h3>Live data and analysis</h3>
               <p>Access to real-time insights including: latest measured carbon intensity (CI), forecasted daily maximum and minimum CI, and a comparison of the measured and forecasted daily CI values.</p>
             </div>
           </div>
           <div id="secondInsight" class="indivInsight">
-            <img src="./images/escooter.svg" alt="a man riding an escooter" class="insightImage">
+            <img src="./images/intro_buildings.svg" alt="a man riding an escooter" class="insightImage">
             <div id="secondInsightCaption" class="insightCaption">
               <h3>Generation Mix</h3>
               <p>A break-down of the proportion of carbon intensity originating from a variety of fuel types including: gas, coal, nuclear, biomass, hydro, imports, solar, wind, and other. </p>
             </div>
           </div>
           <div id="thirdInsight" class="indivInsight">
-            <img src="./images/work.svg" alt="a lady working from home" class="insightImage">
+            <img src="./images/intro_load.svg" alt="a lady working from home" class="insightImage">
             <div id="thirdInsightCaption" class="insightCaption">
               <h3>48-hour forecast</h3>
               <p>NESO's Carbon Intensity API provides an indicative trend of regional carbon intensity of the electricity system in Great Britain up to 2 days ahead of real-time.</p>
@@ -61,28 +65,34 @@
 
       <!-- Data section -->
       <div id="dataContainer">
-        <div id="chartTitle" class="flex">
-          <p>Carbon Intensity Overview</p>
-        </div>
         <div class="flex" id="summaryContainer">
           <div id="latestDataContainer" class="flex spacedTab">
             <div id="forecastTime"></div>
             <div id="latestIntensity"></div>
           </div>
-          <div id="forecastMax" class="spacedTab"></div>
-          <div id="forecastMin" class="spacedTab"></div>
+          <div id=forecastContainer class="spacedTab">
+            <div id="forecastMax"></div>
+            <div id="forecastMin"></div>
+          </div>
         </div>
-        <div id="chartContainer" class="flex" style="position: relative; height:30rem; width:100%">
-          <canvas id="chart" aria-label="a line graph showing the daily measured and forecasted carbon intensity" role="img">
-            <img src="" alt="Unable to load graph">
-          </canvas>
-        </div>
-        <div id="piechartWrapper" class="flex">
-          <div id="piechartLegendContainer" class="flex"></div>
-          <div id="piechartContainer" class="flex" style="position: relative; height:15rem; width:40%" >
-            <canvas id="pieChart" aria-label="a piechartgraph showing the current generation mix by fuel type" role="img">
-              <img src="" alt="Unable to load pie chart">
+        <div id="chartWrapper">
+          <div id="chartTitle">Daily Carbon Intensity (CI)</div> 
+          <div id="chartContainer" class="flex">
+            <canvas id="chart" aria-label="a line graph showing the daily measured and forecasted carbon intensity" role="img">
+              <img src="./images.img_error.svg" alt="Unable to load graph">
             </canvas>
+          </div>
+        </div>
+
+        <div id="piechartSection">
+          <div id="piechartTitle" width="100%"><p>Generation Mix (GM)</p></div>
+          <div id="piechartWrapper">
+            <div id="piechartLegendContainer" class="flex"></div>
+            <div id="piechartContainer" class="flex">
+              <canvas id="pieChart" aria-label="a piechartgraph showing the current generation mix by fuel type" role="img">
+                <img src="./images/img_error.svg" alt="Unable to load pie chart">
+              </canvas>
+            </div>
           </div>
         </div>
       </div>
@@ -101,13 +111,6 @@
         <div>
           <p>Free illustrations from <a href="https://streamlinehq.com">Streamline</a>, licensed under <a href=“https://creativecommons.org/licenses/by/4.0/”>CC BY 4.0</a></p>
         </div>
-        <div>
-          <p>Free illustrations from <a href="https://www.behance.net/IlliyinStudio">@illiyinstudio</a>, licensed under <a href=“https://creativecommons.org/licenses/by/4.0/”>CC BY 4.0</a></p>
-        </div>
-        <div>
-          <p>SVG Underline doodles by <a href="https://www.svgbackgrounds.com/elements/underline-doodles/">SVGBackgrounds.com</a></p>
-        </div>
-      </div>
       </div>
       <div id="logoWrapper" class="flex">
         <div id="nesoLogo">

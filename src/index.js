@@ -1,12 +1,63 @@
-//TASK: get current date and time, apply this to the today_api_url
+//Disappearing navbar
+window.addEventListener('scroll', function() {
+  let header = document.getElementById('header');
+  let headerStyle = header.style;
+  let cssStyles = getComputedStyle(document.body);
+  if (window.scrollY >= 60) {
+    headerStyle.color = 'transparent';
+    headerStyle.background = 'transparent';
+    header.addEventListener('mouseover', function() {
+      headerStyle.color = `${cssStyles.getPropertyValue('--main-white-color')}`;
+      headerStyle.background =`${cssStyles.getPropertyValue('--main-background-color')}`; 
+    })
+    header.addEventListener('mouseout', function() {
+      if (window.scrollY >= 60) {
+        headerStyle.color = 'transparent';
+        headerStyle.background = 'transparent';
+      } else {
+        headerStyle.color = `${cssStyles.getPropertyValue('--main-background-color')}`;
+        headerStyle.background =`${cssStyles.getPropertyValue('--main-white-color')}`; 
+      };
+    })
+  } else {
+    if (headerStyle.color = 'transparent') {
+      headerStyle.color = `${cssStyles.getPropertyValue('--main-background-color')}`;
+      headerStyle.background =`${cssStyles.getPropertyValue('--main-white-color')}`;  
+    }
+    header.addEventListener('mouseover', function() {
+      headerStyle.color = `${cssStyles.getPropertyValue('--main-background-color')}`;
+      headerStyle.background =`${cssStyles.getPropertyValue('--main-white-color')}`;  
+    })
+  }
+});
 
+//Navbar buttons
+document.getElementById('title').addEventListener('click', function() {
+  window.scroll ({
+    top:0,
+    left: 0,
+    behavior: 'smooth'
+  })
+});
+document.getElementById('navCap_1').addEventListener('click', function() {
+  document.getElementById('chartWrapper').scrollIntoView({ behavior: 'smooth', block: 'center'});
+});
+document.getElementById('navCap_2').addEventListener('click', function() {
+  document.getElementById('piechartSection').scrollIntoView({ behavior: 'smooth', block: 'center'});
+});
+document.getElementById('navCap_3').addEventListener('click', scrollToBottom);
+document.getElementById('navCap_4').addEventListener('click', scrollToBottom);
+
+function scrollToBottom() {
+  document.getElementById('creditsWrapper').scrollIntoView({ behavior: 'smooth', block: 'start'});
+}
+
+//Get current date and time, apply this to the today_api_url
 let date = new Date().toJSON();
 let currentDate = date.slice(0, 10);
 let currentTime = `${date.slice(10, 16)}Z`;
 let currentHour = date.slice(11, 13);
 let currentMinute = date.slice(14, 16);
-console.log(`date is ${currentDate}`);
-console.log(`time is ${currentTime}`);
 const today_api_url = `https://api.carbonintensity.org.uk/intensity/date/${currentDate}`
 
 //Get index of latest data
@@ -120,13 +171,14 @@ function generateSummary(from, to, intensity, timeIndex) {
   }
 }
 
+let mixedChart;
 //Initialise chart.js
 function initialiseChart(xlabels, intensityLabels, forecastLabels, dailyMaxForecast) {
   const style = getComputedStyle(document.body);
   const ctx = document.getElementById('chart');
   //Set the y-axis maximum to the maximum daily forecasted carbon intensity added to 200, rounded up to the nearest hundred
   let chartMax = Math.ceil(((dailyMaxForecast + 200)) / 100) * 100;
-  const mixedChart = new Chart(ctx, {
+  mixedChart = new Chart(ctx, {
     data: {
       labels: xlabels,
       datasets: [{
@@ -158,12 +210,6 @@ function initialiseChart(xlabels, intensityLabels, forecastLabels, dailyMaxForec
         tension: 0.2,
         borderWidth: 2,
         pointRadius: 0,
-        //point styles
-        pointHitRadius: 10,
-        pointBorderColor: `${style.getPropertyValue('--dark-yellow-color').trim()}`, 
-        pointBorderWidth: 2,
-        pointHoverBackgroundColor: `${style.getPropertyValue('--yellow-color').trim()}`,
-        // pointHoverBorderColor: `${style.getPropertyValue('--main-blue-color').trim()}`
         order: 2
       }],
     },
@@ -194,7 +240,7 @@ function initialiseChart(xlabels, intensityLabels, forecastLabels, dailyMaxForec
       },
       responsive: true,
       maintainAspectRatio: true,
-      aspectRatio: 12 / 7, //width = 1.75height
+      aspectRatio: 5 / 3, 
       plugins: {
         legend: {
           position: 'bottom'
@@ -202,15 +248,15 @@ function initialiseChart(xlabels, intensityLabels, forecastLabels, dailyMaxForec
       }
     }
   });
+  return mixedChart;
 }
 
-//Energy Generation Mix
+//Generation Mix
 const energyMix_api_url = `https://api.carbonintensity.org.uk/generation/${currentDate}${currentTime}/pt24h`;
 async function getEnergyMix() {
   const response = await fetch(energyMix_api_url);
   const dataArray = await response.json();
   const { data } = dataArray;
-  // let fuelTypeArray = [[], [], [], [], [], [], [], [], [];
 
   let fuelTypeArray = [
     {fuel: 'gas', percentage: []}, 
@@ -267,7 +313,6 @@ async function getEnergyMix() {
         }
       }
     }
-    console.log(fuelTypeArray)
 
   //Current Generation Mix
   let currentPercArray = [];
@@ -292,6 +337,13 @@ async function getEnergyMix() {
     });
     avgPercArray.push(parseFloat((fuelTypeSum / 48).toFixed(1)));
     fuelTypeSum = 0;
+  });
+  avgPercArray.forEach(function(avgPerc) {
+    if (Number.isInteger(avgPerc) === true) {
+      let intAvgPerc = `${avgPerc}.0`;
+      const index = avgPercArray.indexOf(avgPerc)
+      avgPercArray[index] = intAvgPerc;
+    } 
   });
   initialiseCurrentPieChart(currentPercArray, avgPercArray);
 }
