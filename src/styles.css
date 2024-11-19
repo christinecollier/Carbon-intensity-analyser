@@ -315,26 +315,69 @@ body {
     user-select: none;
 }
 
-#chartWrapper {
+.dataSections {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-self: center;
+    background: var(--main-white-color);
+}
+
+#chartWrapper {
     width: 90%;
     border-radius: 0.75rem;
-    background: var(--main-white-color);
     padding: 2rem 2rem 1.5rem 2rem;
     margin: 2rem;
 }
 
-#chartContainer {
+#gmLineWrapper {
+    width: 100%;
+    margin: 1rem 1rem 2rem 1rem;
+}
+
+#gmAccordion {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border-radius: 0.5rem 0.5rem 0 0;
+    /* border: solid 1px var(--main-grey-color); */
+    /* border-bottom: none; */
+    background: var(--light-grey-color);
+    /* margin-bottom: 1rem; */
+    cursor: pointer;
+    font-family: var(--main-font-family);
+    font-weight: 400;
+    font-size: 1rem;
+    color: var(--main-background-color);
+    user-select: none;
+}
+
+#caret {
+    width: 0.7rem;
+    margin-left: 0.25rem;
+    align-self: start;
+    transition: transform 400ms ease-in-out;
+}
+
+#chartContainer, #gmLineContainer {
     display: flex;
     justify-content: center;
     align-self: center;
     position: relative;
     width: 100%;
-    aspect-ratio: 2 / 1;
     border-radius: 0.75rem;
+}
+
+#chartContainer {
+    height: min(50vw, 540px);
+}
+
+#gmLineContainer {
+    display: none;
+    padding-bottom: 1rem;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    height: min(650px, 70vw);
 }
 
 #piechartSection {
@@ -346,7 +389,7 @@ body {
     border-radius: 0.75rem;
     background: var(--main-white-color);
     padding: 2rem 2rem 1.5rem 2rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 
 #chartTitle, #piechartTitle {
@@ -387,11 +430,6 @@ tr {
     text-align: center;
     line-height: 1.5rem;
     margin: 0 0.5rem;
-}
-
-#legTab-Gas, #legTab-Coal, #legTab-Nuclear {
-    color: var(--main-white-color);
-    font-weight: 400;
 }
 
 #piechartContainer {
@@ -499,6 +537,9 @@ footer {
         padding: 1rem;
         aspect-ratio: 3 / 2;
     }
+    #gmLineContainer {
+        padding: 0;
+    }
 }
 
 @media (max-width: 640px) {
@@ -531,5 +572,9 @@ footer {
     }
     #latestDataContainer {
         width: 48%;
+    }
+    #chartContainer {
+        width: 100%;
+        height: 70vw;
     }
 }

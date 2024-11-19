@@ -239,8 +239,7 @@ function initialiseChart(xlabels, intensityLabels, forecastLabels, dailyMaxForec
         }
       },
       responsive: true,
-      maintainAspectRatio: true,
-      aspectRatio: 5 / 3, 
+      maintainAspectRatio: false,
       plugins: {
         legend: {
           position: 'bottom'
@@ -257,17 +256,18 @@ async function getEnergyMix() {
   const response = await fetch(energyMix_api_url);
   const dataArray = await response.json();
   const { data } = dataArray;
+  const style = getComputedStyle(document.body);
 
   let fuelTypeArray = [
-    {fuel: 'gas', percentage: []}, 
-    {fuel: 'coal', percentage: []}, 
-    {fuel: 'biomass', percentage: []}, 
-    {fuel: 'nuclear', percentage: []}, 
-    {fuel: 'hydro', percentage: []}, 
-    {fuel: 'imports', percentage: []}, 
-    {fuel: 'other', percentage: []}, 
-    {fuel: 'wind', percentage: []}, 
-    {fuel: 'solar', percentage: []}
+    {fuel: 'gas', allPercArray: [], 'current percentage': 0, 'average percentage': [], bgColor: `${style.getPropertyValue('--electric-blue-color').trim()}`, fontColor: 'white'}, 
+    {fuel: 'coal', allPercArray: [], 'current percentage': 0, 'average percentage': [], bgColor: `${style.getPropertyValue('--main-orange-color').trim()}`, fontColor: 'white'},
+    {fuel: 'biomass', allPercArray: [], 'current percentage': 0, 'average percentage': [], bgColor: `${style.getPropertyValue('--main-green-color').trim()}`, fontColor: `${style.getPropertyValue('--main-background-color').trim()}`},
+    {fuel: 'nuclear', allPercArray: [], 'current percentage': 0, 'average percentage': [], bgColor: `${style.getPropertyValue('--main-dark-blue-color').trim()}`, fontColor: 'white'}, 
+    {fuel: 'hydro', allPercArray: [], 'current percentage': 0, 'average percentage': [], bgColor: `${style.getPropertyValue('--main-grey-color').trim()}`, fontColor: `${style.getPropertyValue('--main-background-color').trim()}`}, 
+    {fuel: 'imports', allPercArray: [], 'current percentage': 0, 'average percentage': [], bgColor: `${style.getPropertyValue('--yellow-color').trim()}`, fontColor: `${style.getPropertyValue('--main-background-color').trim()}`}, 
+    {fuel: 'other', allPercArray: [], 'current percentage': 0, 'average percentage': [], bgColor: 'hsl(239, 100%, 85%)', fontColor: `${style.getPropertyValue('--main-background-color').trim()}`}, 
+    {fuel: 'wind', allPercArray: [], 'current percentage': 0, 'average percentage': [], bgColor: `${style.getPropertyValue('--opaque-electric-blue-color').trim()}`, fontColor: `${style.getPropertyValue('--main-background-color').trim()}`}, 
+    {fuel: 'solar', allPercArray: [], 'current percentage': 0, 'average percentage': [], bgColor: `${style.getPropertyValue('--dark-yellow-color').trim()}`, fontColor: `${style.getPropertyValue('--main-background-color').trim()}`}
   ];
 
   //Iterate over each half-hour data object
@@ -278,34 +278,35 @@ async function getEnergyMix() {
         let fuelType = fuelData[smallestArray_i]['fuel'];
         let fuelPerc = fuelData[smallestArray_i]['perc'];
         addFuelPercentage();
+
         function addFuelPercentage() {
           switch (fuelType) {
             case 'gas':
-              fuelTypeArray[0].percentage.push(fuelPerc);
+              fuelTypeArray[0].allPercArray.push(fuelPerc);
               break;
             case 'coal':
-              fuelTypeArray[1].percentage.push(fuelPerc);
+              fuelTypeArray[1].allPercArray.push(fuelPerc);
               break;
             case 'biomass':
-              fuelTypeArray[2].percentage.push(fuelPerc);
+              fuelTypeArray[2].allPercArray.push(fuelPerc);
               break;
             case 'nuclear':
-              fuelTypeArray[3].percentage.push(fuelPerc);
+              fuelTypeArray[3].allPercArray.push(fuelPerc);
               break;
             case 'hydro':
-              fuelTypeArray[4].percentage.push(fuelPerc);
+              fuelTypeArray[4].allPercArray.push(fuelPerc);
               break;
             case 'imports':
-              fuelTypeArray[5].percentage.push(fuelPerc);
+              fuelTypeArray[5].allPercArray.push(fuelPerc);
               break;
             case 'other':
-              fuelTypeArray[6].percentage.push(fuelPerc);
+              fuelTypeArray[6].allPercArray.push(fuelPerc);
               break;
             case 'wind':
-              fuelTypeArray[7].percentage.push(fuelPerc);
+              fuelTypeArray[7].allPercArray.push(fuelPerc);
               break;
             case 'solar':
-              fuelTypeArray[8].percentage.push(fuelPerc);
+              fuelTypeArray[8].allPercArray.push(fuelPerc);
               break;
             default:
               console.error('Switch statement error');
@@ -315,62 +316,77 @@ async function getEnergyMix() {
     }
 
   //Current Generation Mix
-  let currentPercArray = [];
   fuelTypeArray.forEach(function(fuelObject) {
-    let currentPerc = fuelObject.percentage[47]
-    //Append '.0' to integer percentages
-    if (Number.isInteger(currentPerc) === true) {
-      let intPerc = `${currentPerc}.0`;
-      currentPercArray.push(intPerc);
-    } else {
-      currentPercArray.push(currentPerc);
-    }
+    let currentPerc = fuelObject.allPercArray[47];
+    fuelObject['current percentage'] = currentPerc;
   });
 
   //Average Generation Mix over past 24 hours
-  let avgPercArray = [];
   let fuelTypeSum = 0;
   fuelTypeArray.forEach(function(fuelObject) {
-    let percentageArray = fuelObject.percentage;
+    let percentageArray = fuelObject.allPercArray;
     percentageArray.forEach(function(percentage) {
       fuelTypeSum += percentage;
     });
-    avgPercArray.push(parseFloat((fuelTypeSum / 48).toFixed(1)));
+    let avgPerc = parseFloat((fuelTypeSum / 48).toFixed(1));
+    fuelObject['average percentage'] = avgPerc;
     fuelTypeSum = 0;
   });
-  avgPercArray.forEach(function(avgPerc) {
-    if (Number.isInteger(avgPerc) === true) {
-      let intAvgPerc = `${avgPerc}.0`;
-      const index = avgPercArray.indexOf(avgPerc)
-      avgPercArray[index] = intAvgPerc;
-    } 
-  });
-  initialiseCurrentPieChart(currentPercArray, avgPercArray);
+
+  let fuelTypeArrayCopy = fuelTypeArray.slice();
+
+  let currentPercStorage = [];
+  let currentMaxGM;
+  let sectionLabels = [];
+  let currentPercArray = [];
+  let avgPercArray = [];
+  let chartColours = [];
+  let fontColours = [];
+  console.log(fuelTypeArrayCopy)
+
+  // (1) Add all 'current percentage' values to a new array
+  for (let i = 0; i < fuelTypeArrayCopy.length; i++) {
+    currentPercStorage.push(fuelTypeArrayCopy[i]['current percentage']);
+  }
+  console.log(currentPercStorage)
+
+  // (2) Find the maximum value in the new array from step (1). Remove the item at that index from the fuelTypeArrayCopy. Repeat till all it's contents are gone.
+  for (let i = 0; i < currentPercStorage.length; i++) {
+    currentMaxGM = Math.max(...currentPercStorage);
+    console.log(currentMaxGM);
+    let index = currentPercStorage.indexOf(currentMaxGM);
+    //Append '.0' to integer percentages
+    console.log(Number.isInteger(currentMaxGM))
+    if (Number.isInteger(currentMaxGM) === true) {
+      let intPerc = parseFloat(`${currentMaxGM}.0`);
+      currentPercStorage.splice(index, 1, -1);
+      fuelTypeArrayCopy[index]['current percentage'] = intPerc;
+    } else {
+      fuelTypeArrayCopy[index]['current percentage'] = currentMaxGM;
+    }
+
+    sectionLabels.push(fuelTypeArrayCopy[index].fuel[0].toUpperCase() + fuelTypeArrayCopy[index].fuel.slice(1));
+    currentPercArray.push(fuelTypeArrayCopy[index]['current percentage']);
+    avgPercArray.push(fuelTypeArrayCopy[index]['average percentage']);
+    chartColours.push(fuelTypeArrayCopy[index].bgColor);
+    fontColours.push(fuelTypeArrayCopy[index].fontColor)
+    currentPercStorage.splice(index, 1, -1);
+  }
+  initialiseCurrentPieChart(sectionLabels, currentPercArray, avgPercArray, chartColours, fontColours);
+  createGmObjects(data, fuelTypeArray)
 }
 setInterval(getEnergyMix(), 360000)
 
 
-function initialiseCurrentPieChart(currentPercArray, avgPercArray) {
+function initialiseCurrentPieChart(sectionLabels, currentPercArray, avgPercArray, chartColours, fontColours) {
   const style = getComputedStyle(document.body);
   const pieChart = document.getElementById('pieChart');
-  const sectionLabels = ['Gas', 'Coal', 'Biomass', 'Nuclear', 'Hydro', 'Imports', 'Other', 'Wind', 'Solar'];
-  let chartColours = [
-      `${style.getPropertyValue('--electric-blue-color').trim()}`,
-      `${style.getPropertyValue('--main-orange-color').trim()}`,
-      `${style.getPropertyValue('--main-green-color').trim()}`, 
-      `${style.getPropertyValue('--main-dark-blue-color').trim()}`,
-      `${style.getPropertyValue('--main-grey-color').trim()}`,
-      `${style.getPropertyValue('--yellow-color').trim()}`, 
-      `${style.getPropertyValue('--opaque-electric-blue-color').trim()}`,
-      'hsl(0, 0%, 75%)', 
-      `${style.getPropertyValue('--dark-yellow-color').trim()}`
-  ];
   const percChart = new Chart(pieChart, {
     type: 'doughnut',
     data: {
       labels: sectionLabels,
       datasets: [{
-        label: 'Current Generation Mix',
+        label: 'Current GM%',
         data: currentPercArray,
         backgroundColor: chartColours,
         borderColor: `${style.getPropertyValue('--main-white-color').trim()}`,
@@ -391,12 +407,11 @@ function initialiseCurrentPieChart(currentPercArray, avgPercArray) {
     }
 
   });
-
-  createLegend(currentPercArray, avgPercArray, chartColours);
+  createPieLegend(sectionLabels, currentPercArray, avgPercArray, chartColours, fontColours);
 }
 
-function createLegend(currentPercArray, avgPercArray, chartColours) {
-  let legendLabel = ['Gas', 'Coal', 'Biomass', 'Nuclear', 'Hydro', 'Imports', 'Other', 'Wind', 'Solar'];
+function createPieLegend(sectionLabels, currentPercArray, avgPercArray, chartColours, fontColours) {
+  let legendLabel = sectionLabels;
   document.getElementById('piechartLegendContainer').innerHTML = `
     <table id="piechartLegend">
       <tr>
@@ -423,6 +438,118 @@ function createLegend(currentPercArray, avgPercArray, chartColours) {
   for (let i = 0; i < legendLabel.length; i++) {
     let label = legendLabel[i];
     document.getElementById(`legTab-${label}`).style.backgroundColor = `${chartColours[i]}`;
+    document.getElementById(`legTab-${label}`).style.color = `${fontColours[i]}`
   }
   document.getElementById('piechartCaption').style.fontSize = `${0.8 * 16}px`;
 }
+
+function createGmObjects(data, fuelTypeArray) {
+  //Get x-axis labels
+  let timeLabels = [];
+  data.forEach(function(timeIntervalObject) {
+    let timeStart = timeIntervalObject.from.slice(11, 16);
+    timeLabels.push(timeStart)
+  })
+
+  //Graph colours
+  const style = getComputedStyle(document.body);
+  let colourArray = [
+    `${style.getPropertyValue('--electric-blue-color').trim()}`,
+    `${style.getPropertyValue('--main-orange-color').trim()}`,
+    `${style.getPropertyValue('--main-green-color').trim()}`,
+    `${style.getPropertyValue('--main-dark-blue-color').trim()}`,
+    `${style.getPropertyValue('--main-grey-color').trim()}`,
+    `${style.getPropertyValue('--yellow-color').trim()}`,
+    'hsl(239, 100%, 85%)',
+    `${style.getPropertyValue('--opaque-electric-blue-color').trim()}`,
+    `${style.getPropertyValue('--dark-yellow-color').trim()}`
+  ];
+
+  console.log(colourArray[0])
+  console.log(fuelTypeArray[0])
+
+  //Create dataset for each fuel type
+  let graphDataset = [];
+  for (let i = 0; i < fuelTypeArray.length; i++) {
+    let graphDataObject = {};
+    graphDataObject.label = fuelTypeArray[i].fuel;
+    graphDataObject.data = fuelTypeArray[i].allPercArray;
+    graphDataObject.borderColor = colourArray[i];
+    graphDataObject.tension = 0.3;
+    graphDataObject.borderWidth = 2;
+    graphDataObject.hoverBackgroundColor = colourArray[i];
+    graphDataObject.pointRadius = 0;
+    graphDataObject.pointHitRadius = 10;
+    graphDataObject.pointBorderColor = colourArray[i];
+    graphDataObject.pointBorderWidth = 2;
+    graphDataObject.pointHoverBackgroundColor = colourArray[i];
+    graphDataObject.order = 1;
+    graphDataset.push(graphDataObject)
+  }
+  initialiseDailyGM(timeLabels, graphDataset)
+}
+
+//Initialise 24h GM distribution line graph
+function initialiseDailyGM(timeLabels, graphDataset) {
+  const ctx = document.getElementById('gmLineChart');
+  //Set the y-axis maximum to the maximum daily forecasted carbon intensity added to 200, rounded up to the nearest hundred
+  console.log(timeLabels)
+  let chartMax = 100;
+  const gmTrendChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: timeLabels,
+      datasets: graphDataset
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: chartMax,
+          title: {
+            display: true,
+            text: 'GM Distribution (%)',
+            font: {
+              family: "'Roboto', sans-serif",
+              size: 14
+            } 
+          }
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Time (Local Time)',
+            font: {
+              family: "'Roboto', sans-serif",
+              size: 14 
+            } 
+          }
+        }
+      },
+      responsive: true,
+      maintainAspectRatio: true,
+      aspectRatio: 1 / 1, 
+      plugins: {
+        legend: {
+          position: 'bottom'
+        }
+      }
+    }
+  });
+}
+
+document.getElementById('gmAccordion').addEventListener('click', function() {
+  let container =  document.getElementById('gmLineContainer');
+  let chevronIcon = document.getElementById('caret');
+  if (container.style.display === 'flex') {
+    container.style.display = 'none';
+    // chevronIcon.src = './images/caret_down.svg';
+    chevronIcon.style.transform = 'rotate(360deg)';
+    document.getElementById('piechartSection').scrollIntoView({ behavior: 'smooth', block: 'center'});
+  } else {
+    container.style.display = 'flex';
+    // chevronIcon.src = './images/caret_up.svg';
+    chevronIcon.style.transform = 'rotate(180deg)';
+    document.getElementById('gmLineContainer').scrollIntoView({ behavior: 'smooth', block: 'center'});
+  }
+})

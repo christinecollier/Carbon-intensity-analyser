@@ -50,7 +50,7 @@
             <img src="./images/intro_buildings.svg" alt="a man riding an escooter" class="insightImage">
             <div id="secondInsightCaption" class="insightCaption">
               <h3>Generation Mix</h3>
-              <p>A break-down of the proportion of carbon intensity originating from a variety of fuel types including: gas, coal, nuclear, biomass, hydro, imports, solar, wind, and other. </p>
+              <p>A break-down of the relative Carbon Intensities of a variety of fuel types including: gas, coal, nuclear, biomass, hydro, imports, solar, wind, and other. </p>
             </div>
           </div>
           <div id="thirdInsight" class="indivInsight">
@@ -94,6 +94,17 @@
               </canvas>
             </div>
           </div>
+          <div id="gmLineWrapper" class="dataSections">
+            <div id="gmAccordion">
+              <div id="gmLineTitle">24-hour GM Distribution</div>
+              <img id="caret" src="./images/caret_down.svg" alt="downwards caret"></div> 
+            </div>
+            <div id="gmLineContainer" class="flex">
+              <canvas id="gmLineChart" aria-label="a line graph showing the GM over the past 24 hours" role="img">
+                <img src="./images/img_error.svg" alt="Unable to load graph">
+              </canvas>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -114,13 +125,13 @@
       </div>
       <div id="logoWrapper" class="flex">
         <div id="nesoLogo">
-          <a href="https://www.neso.energy/">
-            <img src="./images/NESO_logo.svg" height="60" aria-label="NESO logo">
+          <a href="https://www.neso.energy/" rel="noopener" target="_blank">
+            <img src="./images/NESO_logo.svg" height="60" aria-label="NESO logo" title="NESO CI API">
           </a>
         </div>
         <div id="chartjsLogo">
-          <a href="https://www.chartjs.org/">
-            <img src="./images/chart.js_logo.png" aria-label="Chart.js logo">
+          <a href="https://www.chartjs.org/" rel="noopener" target="_blank">
+            <img src="./images/chart.js_logo.png" aria-label="Chart.js logo" title="Chart.JS">
           </a>
         </div>
       </div>
