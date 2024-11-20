@@ -140,7 +140,7 @@ function generateSummary(from, to, intensity, timeIndex) {
   let intensityLabel = intensity['index'][0].toUpperCase() + intensity['index'].slice(1);
 
   document.getElementById('forecastTime').innerHTML = `
-    <div id="timePeriodCaption">Latest carbon intensity data available  
+    <div id="timePeriodCaption">*Latest carbon intensity data available  
        ${timeIndex >= 2 ? 'for ' : 'in '}
     </div>
     <div id="timePeriod" class="chartSummaryStats">

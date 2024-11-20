@@ -64,43 +64,45 @@
       </div>
 
       <!-- Data section -->
-      <div id="dataContainer">
-        <div class="flex" id="summaryContainer">
-          <div id="latestIntensity" class="spacedTab"></div>
-          <div id="forecastMax" class="spacedTab"></div>
-          <div id="forecastMin" class="spacedTab"></div>
-        </div>
-        <div id="chartWrapper" class="dataSections">
-          <div id="chartTitle">Daily Carbon Intensity (CI)</div> 
-          <div id="chartContainer" class="flex">
-            <canvas id="chart" aria-label="a line graph showing the daily measured and forecasted carbon intensity" role="img">
-              <img src="./images.img_error.svg" alt="Unable to load graph">
-            </canvas>
+      <div id="dataWrapper">
+        <div id="dataContainer">
+          <div class="flex" id="summaryContainer">
+            <div id="latestIntensity" class="spacedTab"></div>
+            <div id="forecastMax" class="spacedTab"></div>
+            <div id="forecastMin" class="spacedTab"></div>
           </div>
-          <div id="forecastTime"></div>
-        </div>
-        <div id="piechartSection">
-          <div id="piechartTitle" width="100%"><p>Generation Mix (GM)</p></div>
-          <div id="piechartWrapper">
-            <div id="piechartLegendContainer" class="flex"></div>
-            <div id="piechartContainer" class="flex">
-              <canvas id="pieChart" aria-label="a piechartgraph showing the current generation mix by fuel type" role="img">
-                <img src="./images/img_error.svg" alt="Unable to load pie chart">
+          <div id="chartWrapper" class="dataSections">
+            <div id="chartTitle">Daily Carbon Intensity (CI)</div> 
+            <div id="chartContainer" class="flex">
+              <canvas id="chart" aria-label="a line graph showing the daily measured and forecasted carbon intensity" role="img">
+                <img src="./images.img_error.svg" alt="Unable to load graph">
               </canvas>
             </div>
+            <div id="forecastTime"></div>
           </div>
-          <div id="gmLineWrapper" class="dataSections">
-            <div id="gmAccordion">
-              <div id="gmLineTitle">24-hour GM Distribution</div>
-              <img id="caret" src="./images/caret_down.svg" alt="downwards caret"></div> 
+          <div id="piechartSection">
+            <div id="piechartTitle" width="100%"><p>Generation Mix (GM)</p></div>
+            <div id="piechartWrapper">
+              <div id="piechartLegendContainer" class="flex"></div>
+              <div id="piechartContainer" class="flex">
+                <canvas id="pieChart" aria-label="a piechartgraph showing the current generation mix by fuel type" role="img">
+                  <img src="./images/img_error.svg" alt="Unable to load pie chart">
+                </canvas>
+              </div>
             </div>
-            <div id="gmLineContainer" class="flex">
-              <canvas id="gmLineChart" aria-label="a line graph showing the GM over the past 24 hours" role="img">
-                <img src="./images/img_error.svg" alt="Unable to load graph">
-              </canvas>
-            </div>
-            <div id="gmLineChartCaption">
-              <p>*Note: All datapoints are contained within the graph (the maximum y-axis value automatically adjusts to accomodate all data values).</p>
+            <div id="gmLineWrapper" class="dataSections">
+              <div id="gmAccordion">
+                <div id="gmLineTitle">24-hour GM Distribution</div>
+                <img id="caret" src="./images/caret_down.svg" alt="downwards caret"></div> 
+              </div>
+              <div id="gmLineContainer" class="flex">
+                <canvas id="gmLineChart" aria-label="a line graph showing the GM over the past 24 hours" role="img">
+                  <img src="./images/img_error.svg" alt="Unable to load graph">
+                </canvas>
+              </div>
+              <div id="gmLineChartCaption">
+                <p>*Note: All datapoints are contained within the graph (the maximum y-axis value automatically adjusts to accomodate all data values).</p>
+              </div>
             </div>
           </div>
         </div>
@@ -118,7 +120,10 @@
       </div>
       <div id="credits" class="flex">
         <div>
-          <p>Free illustrations from <a href="https://streamlinehq.com">Streamline</a>, licensed under <a href=“https://creativecommons.org/licenses/by/4.0/”>CC BY 4.0</a></p>
+          <p>Free illustrations from <a href="https://streamlinehq.com">Streamline</a>, licensed under <a href=“https://creativecommons.org/licenses/by/4.0/” rel="noopener" target="_blank">CC BY 4.0</a></p>
+        </div>
+        <div>
+          <p>Footer pattern illustration from <a href="https://www.behance.net/IlliyinStudio" rel="noopener" target="_blank">@illiyinstudio</a>, licensed under <a href=“https://creativecommons.org/licenses/by/4.0/” rel="noopener" target="_blank">CC BY 4.0</a></p>
         </div>
       </div>
       <div id="logoWrapper" class="flex">

@@ -53,6 +53,7 @@ header {
     align-items: center;
     padding: 2rem 3rem 1rem 3rem;
     width: 100%;
+    transition: padding 400ms ease-in 20ms;
 }
 
 #title {
@@ -145,10 +146,8 @@ body {
 }
 
 #introText h2 {
-    display: flex;
     align-items: center;
     margin: 0.5rem 0;
-    white-space: nowrap;
 }
 
 #introText a, #introText h2 a img {
@@ -217,6 +216,13 @@ body {
     margin-bottom: auto;
 }
 
+#dataWrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    background: var(--light-grey-color);
+}
+
 #dataContainer {
     display: flex;
     align-items: center;
@@ -225,7 +231,6 @@ body {
     width: min(100%, 1024px);
     margin: 3rem 0 0 0;
     padding: 2rem 0 1rem 0;
-    background: var(--light-grey-color);
 }
 
 #summaryContainer {
@@ -618,6 +623,9 @@ footer {
 }
 
 @media (max-width: 535px) {
+    #hero {
+        padding: 1.5rem 1.5rem 1rem 1.5rem;
+    }
     #summaryContainer {
         justify-content: center;
     }
