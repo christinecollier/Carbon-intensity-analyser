@@ -14,10 +14,10 @@ A web page that uses NESO's Carbon Intensity API to provide live updates and dat
 
 ## New skills learnt:
 
-#### Development:
+#### Web development, JavaScript libraries & Data:
 - Using fetch() and asynchronous functions in JavaScript to request and manipulate API data.
-- Using Chart.JS to create responsive and custom-styled graphs and charts.
-- Using documentation to understand how to use the Chart.JS library.
+- Using Chart.js to create responsive and custom-styled graphs and charts.
+- Using documentation to understand how to use the Chart.js library.
 - Data Visualisation with JavaScript.
 
 #### User experience:
