@@ -43,7 +43,7 @@ document.getElementById('navCap_1').addEventListener('click', function() {
   document.getElementById('chartWrapper').scrollIntoView({ behavior: 'smooth', block: 'center'});
 });
 document.getElementById('navCap_2').addEventListener('click', function() {
-  document.getElementById('piechartSection').scrollIntoView({ behavior: 'smooth', block: 'center'});
+  document.getElementById('piechartSection').scrollIntoView({ behavior: 'smooth', block: 'start'});
 });
 document.getElementById('navCap_3').addEventListener('click', scrollToBottom);
 document.getElementById('navCap_4').addEventListener('click', scrollToBottom);
@@ -130,39 +130,78 @@ function generateSummary(from, to, intensity, timeIndex) {
   }
   //'...' is 'spread syntax'
   let dailyMaxForecast = Math.max(...dailyForecastArray);
+  let maxGmIndex = dailyForecastArray.indexOf(dailyMaxForecast);
+  let dailyMaxTimeFrom = data[maxGmIndex].from.slice(11, 16);
+  let dailyMaxTimeTo = data[maxGmIndex].to.slice(11, 16);
   let dailyMinForecast = Math.min(...dailyForecastArray);
+  let minGmIndex = dailyForecastArray.indexOf(dailyMinForecast);
+  let dailyMinTimeFrom = data[minGmIndex].from.slice(11, 16);
+  let dailyMinTimeTo = data[minGmIndex].to.slice(11, 16);
+  let intensityLabel = intensity['index'][0].toUpperCase() + intensity['index'].slice(1);
 
   document.getElementById('forecastTime').innerHTML = `
-    <div id="timePeriodCaption">Latest data available 
-       ${timeIndex >= 2 ? 'for ' : 'in'}
+    <div id="timePeriodCaption">Latest carbon intensity data available  
+       ${timeIndex >= 2 ? 'for ' : 'in '}
     </div>
     <div id="timePeriod" class="chartSummaryStats">
-      ${timeIndex >= 2 ? `${timeFrom} - ${timeTo}` : `${60 - currentMinute} minutes`}
+      ${timeIndex >= 2 ? `${timeFrom} - ${timeTo}` : `${60 - currentMinute} minutes.`}
     </div>
   `;
   document.getElementById('latestIntensity').innerHTML = `
-    <div id="timePeriodCaption" class="flex">
-      ${timeIndex >= 2 ? `${intensity['index']}` : ''}
-    </div>
+    <div id="colourTab1" class="colourTabs"></div>
+    <div class="tabTitles">Carbon Intensity*</div>
     <div id="intensityContainer" class="flex">
-      <div>
-        <img id="intensityGauge" src="./images/intensity_indicator.svg" alt="intensity gauge icon" width="20" height="20">
-      </div>
       <div class="chartSummaryStats">
-        ${timeIndex >= 2 ? `${intensity['actual']}` : `pending`}
+        ${timeIndex >= 2 ? `${intensity['actual']}` : `Pending*`}
+      </div>
+      <div id="intensityGauge" class="gauge">
+        <img src="./images/intensity_indicator.svg" alt="intensity gauge icon" width="20" height="20">
       </div>
     </div>
-  `;
-  document.getElementById('latestIntensity').style.color = 'var(--electric-blue-color)';
-  console.log(document.getElementById('intensityGauge').getElementsByTagName('img'));
+    <div id="intensityCaption" class="flex intensityCaptions">
+      ${timeIndex >= 2 ? `${intensityLabel}` : 'Pending'}
+    </div>
+    `;
+  document.getElementById('latestIntensity').style.color = 'var(--main-background-color)';
+  document.getElementById('intensityCaption').style.color = '#6a8eb9';
+  
   document.getElementById('forecastMax').innerHTML = `
-    <div id="maxCaption" class="flex">Max: </div>
-    <div id="dailyMaxIntensity" class="chartSummaryStats">${dailyMaxForecast}</div>
+    <div id="colourTab2" class="colourTabs"></div>
+    <div id="maxCaption" class="tabTitles"flex">Forecasted Maximum</div>
+
+    <div id="maxContainer" class="flex">
+      <div class="chartSummaryStats">
+        <div id="dailyMaxIntensity" class="chartSummaryStats">${dailyMaxForecast}</div>
+      </div>
+      <div id="maxGauge" class="gauge">
+        <img src="./images/arrow_up.svg" alt="intensity gauge icon" width="20" height="20">
+      </div>
+    </div>
+    <div id="maxIntensity" class="flex intensityCaptions">
+      ${`${dailyMaxTimeFrom} - ${dailyMaxTimeTo}`}
+    </div>
   `;
+  document.getElementById('forecastMax').style.color = 'var(--main-background-color)';
+  document.getElementById('maxIntensity').style.color = '#6a8eb9';
+
   document.getElementById('forecastMin').innerHTML = `
-    <div id="minCaption" class="flex">Min: </div>
-    <div id="dailyMinIntensity" class="chartSummaryStats">${dailyMinForecast}</div>
+    <div id="colourTab3" class="colourTabs"></div>
+    <div id="minCaption" class="tabTitles" flex">Forecasted Minimum</div>
+
+    <div id="minContainer" class="flex">
+      <div class="chartSummaryStats">
+        <div id="dailyMinIntensity" class="chartSummaryStats">${dailyMinForecast}</div>
+      </div>
+      <div id="minGauge" class="gauge">
+        <img src="./images/arrow_down.svg" alt="intensity gauge icon" width="20" height="20">
+      </div>
+    </div>
+    <div id="minIntensity" class="flex intensityCaptions">
+      ${`${dailyMinTimeFrom} - ${dailyMinTimeTo}`}
+    </div>
   `;
+  document.getElementById('forecastMin').style.color = 'var(--main-background-color)';
+  document.getElementById('minIntensity').style.color = '#6a8eb9';
   
   previousDataObject = data[timeIndex - 1]
   latestDataObject = data[timeIndex];
@@ -465,8 +504,15 @@ function createGmObjects(data, fuelTypeArray) {
     `${style.getPropertyValue('--dark-yellow-color').trim()}`
   ];
 
-  console.log(colourArray[0])
-  console.log(fuelTypeArray[0])
+  //Calculate the max percentage across all fuel types, acroll the 24h time period
+  let fuelMaxArray = []
+  fuelTypeArray.forEach(function(fuelTypeObject) {
+    let arrayMax = Math.max(...fuelTypeObject.allPercArray);
+    fuelMaxArray.push(arrayMax)
+  })
+  let dailyMaxGm = Math.max(...fuelMaxArray);
+  //Set the y-axis maximum to the maximum 24h GM% added to 20, rounded up to the nearest ten
+  let yAxisMax = Math.ceil(((dailyMaxGm + 20)) / 10) * 10;
 
   //Create dataset for each fuel type
   let graphDataset = [];
@@ -486,15 +532,13 @@ function createGmObjects(data, fuelTypeArray) {
     graphDataObject.order = 1;
     graphDataset.push(graphDataObject)
   }
-  initialiseDailyGM(timeLabels, graphDataset)
+  initialiseDailyGM(timeLabels, graphDataset, yAxisMax)
 }
 
 //Initialise 24h GM distribution line graph
-function initialiseDailyGM(timeLabels, graphDataset) {
+function initialiseDailyGM(timeLabels, graphDataset, yAxisMax) {
   const ctx = document.getElementById('gmLineChart');
-  //Set the y-axis maximum to the maximum daily forecasted carbon intensity added to 200, rounded up to the nearest hundred
-  console.log(timeLabels)
-  let chartMax = 100;
+  let chartMax = yAxisMax;
   const gmTrendChart = new Chart(ctx, {
     type: 'line',
     data: {
@@ -527,7 +571,7 @@ function initialiseDailyGM(timeLabels, graphDataset) {
         }
       },
       responsive: true,
-      maintainAspectRatio: true,
+      maintainAspectRatio: false,
       aspectRatio: 1 / 1, 
       plugins: {
         legend: {
@@ -543,12 +587,10 @@ document.getElementById('gmAccordion').addEventListener('click', function() {
   let chevronIcon = document.getElementById('caret');
   if (container.style.display === 'flex') {
     container.style.display = 'none';
-    // chevronIcon.src = './images/caret_down.svg';
     chevronIcon.style.transform = 'rotate(360deg)';
     document.getElementById('piechartSection').scrollIntoView({ behavior: 'smooth', block: 'center'});
   } else {
     container.style.display = 'flex';
-    // chevronIcon.src = './images/caret_up.svg';
     chevronIcon.style.transform = 'rotate(180deg)';
     document.getElementById('gmLineContainer').scrollIntoView({ behavior: 'smooth', block: 'center'});
   }

@@ -29,7 +29,7 @@
       <div id="introContainer">
         <div id="introText">
           <h1><span id="introTextSpan">Live Insights, </span><br>One Place.</h1>
-          <h2>Powered by the<a href="https://carbon-intensity.github.io/api-definitions/#carbon-intensity-api-v2-0-0">NESO Carbon Intensity API <img src="./images/new_tab_icon.svg"></a></h2>
+          <h2>Powered by the<a href="https://carbon-intensity.github.io/api-definitions/#carbon-intensity-api-v2-0-0"rel="noopener" target="_blank">NESO Carbon Intensity API <img src="./images/new_tab_icon.svg"></a></h2>
           <div id="subIntroText">What is Carbon Intensity?</div>
           <p>The <strong>carbon intensity</strong> of electricity is a measure of how much CO<sub>2</sub> emissions are produced per kilowatt hour of electricity consumed.</p>
         </div>
@@ -66,24 +66,19 @@
       <!-- Data section -->
       <div id="dataContainer">
         <div class="flex" id="summaryContainer">
-          <div id="latestDataContainer" class="flex spacedTab">
-            <div id="forecastTime"></div>
-            <div id="latestIntensity"></div>
-          </div>
-          <div id=forecastContainer class="spacedTab">
-            <div id="forecastMax"></div>
-            <div id="forecastMin"></div>
-          </div>
+          <div id="latestIntensity" class="spacedTab"></div>
+          <div id="forecastMax" class="spacedTab"></div>
+          <div id="forecastMin" class="spacedTab"></div>
         </div>
-        <div id="chartWrapper">
+        <div id="chartWrapper" class="dataSections">
           <div id="chartTitle">Daily Carbon Intensity (CI)</div> 
           <div id="chartContainer" class="flex">
             <canvas id="chart" aria-label="a line graph showing the daily measured and forecasted carbon intensity" role="img">
               <img src="./images.img_error.svg" alt="Unable to load graph">
             </canvas>
           </div>
+          <div id="forecastTime"></div>
         </div>
-
         <div id="piechartSection">
           <div id="piechartTitle" width="100%"><p>Generation Mix (GM)</p></div>
           <div id="piechartWrapper">
@@ -103,6 +98,9 @@
               <canvas id="gmLineChart" aria-label="a line graph showing the GM over the past 24 hours" role="img">
                 <img src="./images/img_error.svg" alt="Unable to load graph">
               </canvas>
+            </div>
+            <div id="gmLineChartCaption">
+              <p>*Note: All datapoints are contained within the graph (the maximum y-axis value automatically adjusts to accomodate all data values).</p>
             </div>
           </div>
         </div>
