@@ -229,7 +229,6 @@ body {
     flex-direction: column;
     flex-wrap: nowrap;
     width: min(100%, 1024px);
-    margin: 3rem 0 0 0;
     padding: 2rem 0 1rem 0;
 }
 
