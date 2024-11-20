@@ -3,7 +3,7 @@ A web page that uses NESO's Carbon Intensity API to provide live updates and dat
 
 ## Highlights:
 
-- Dynamic data visualisation    | Chart.JS and JavaScript
+- Dynamic data visualisation    | Chart.js and JavaScript
 - Responsive                    | Flexible layout across different device types
 - User experience               | Intuitive design, web accessibility
 
